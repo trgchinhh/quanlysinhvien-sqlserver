@@ -147,7 +147,7 @@ Môt số thành phần sẽ được tiếp tục cải thiện
 - [x] Thiết kế cơ sở dữ liệu 
 - [x] Phát triển tính năng thống kê
 - [ ] Cải thiện bảo mật tài khoản
-- [ ] Bổ sung Logging
+- [ ] Bổ sung hệ thống Logging
 
 ## Tác giả
 **Nguyễn Trường Chinh (NTC++)**<br>
