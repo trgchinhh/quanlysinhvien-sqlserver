@@ -79,7 +79,7 @@ public class Program {
 					5 => Markup.Escape("[05] Sắp xếp thông tin"),
 					6 => Markup.Escape("[06] Xóa thông tin"),
 					7 => Markup.Escape("[07] Thống kê"),
-					8 => Markup.Escape("[08] Quay lại"),
+					8 => Markup.Escape("[08] Đăng xuất"),
 					_ => ""
 				})
 			);

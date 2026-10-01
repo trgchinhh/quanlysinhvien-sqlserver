@@ -11,7 +11,8 @@ namespace QuanLySinhVien_SQLserver {
 		// Bổ sung tên server SQL server của máy bạn
 		// ví dụ tenserver = DESKTOP-E...\\SQLEXPRESS
 		private static readonly string tenserver = "";
-		// tên database đã được tích hợp vào file script.sql nếu đổi tên thì phải đổi trong file script
+		// tên database đã được tích hợp vào file script.sql 
+		// nếu đổi tên thì phải đổi trong file script
 		private static readonly string tendatabse = "QuanLySinhVien-SQLserver";
 		private static readonly string csdl =
 			$"Server={tenserver};Database={tendatabse};Trusted_Connection=True;TrustServerCertificate=True;";
