@@ -29,11 +29,14 @@ namespace QuanLySinhVien_SQLserver {
 		};
 
 		public QuanLyGiangVien() {
+			Console.Clear();
+			Console.WriteLine(HamPhuProgram.noidungbanner);
 			// Nếu ko kết nối được với database thì exit 
 			if(!db.KiemTra()){
 				Environment.Exit(0);
 			}
 			this.Napdulieulopvagiangvien();
+			HamPhuProgram.DungChuongTrinh();
 		}
 
 		// nạp lại lớp + giảng viên từ database (au khi đăng ký tài khoản mới)

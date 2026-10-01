@@ -22,18 +22,22 @@ namespace QuanLySinhVien_SQLserver {
 			return ketnoi;
 		}
 
+		public void InThongTinServer(SqlConnection ketnoi){
+			Console.WriteLine("" +
+				$"Database kết nối thành công !\n" +
+				$"Server: {ketnoi.DataSource}\n" +
+				$"Tên Database: {ketnoi.Database}\n"
+			);
+		}
+
 		public bool KiemTra() {
 			if(string.IsNullOrEmpty(tenserver) || string.IsNullOrEmpty(tendatabse)){
 				Mau.InLoi("Chưa điền tên server/database. Vui lòng điền trong Data/KetNoiDuLieu.cs");
 				return false;
 			}
 			try {
-				using var kn = LayKetNoi();
-				Console.WriteLine("" +
-					$"Database đang kết nối\n" +
-					$"Server = {kn.DataSource}\n" +
-					$"Tên DB = {kn.Database}\n"
-				);
+				using var ketnoi = LayKetNoi();
+				InThongTinServer(ketnoi);
 				return true;				
 			} catch(SqlException ex){
 				Mau.InLoi($"Không kết nối được với Database: {ex.Message}");
