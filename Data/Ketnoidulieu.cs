@@ -8,11 +8,12 @@ using Microsoft.IdentityModel.Tokens.Experimental;
 
 namespace QuanLySinhVien_SQLserver {
 	internal class Ketnoidulieu {
-		// Bổ sung tên server SQL server của máy bn
+		// Bổ sung tên server SQL server của máy bạn
 		// ví dụ tenserver = DESKTOP-E...\\SQLEXPRESS
-		private static readonly string tenserver = "DESKTOP-E85EMI4\\SQLEXPRESS";
+		private static readonly string tenserver = "";
+		// tên database đã được tích hợp vào file script.sql nếu đổi tên thì phải đổi trong file script
 		private static readonly string tendatabse = "QuanLySinhVien-SQLserver";
-		private readonly string csdl =
+		private static readonly string csdl =
 			$"Server={tenserver};Database={tendatabse};Trusted_Connection=True;TrustServerCertificate=True;";
 
 		public SqlConnection LayKetNoi() {
@@ -22,6 +23,10 @@ namespace QuanLySinhVien_SQLserver {
 		}
 
 		public bool KiemTra() {
+			if(string.IsNullOrEmpty(tenserver) || string.IsNullOrEmpty(tendatabse)){
+				Mau.InLoi("Chưa điền tên server/database. Vui lòng điền trong Data/KetNoiDuLieu.cs");
+				return false;
+			}
 			try {
 				using var kn = LayKetNoi();
 				Console.WriteLine("" +

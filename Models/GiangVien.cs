@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace QuanLySinhVien_SQLserver {
 	internal class GiangVien {
-		private string magiangvien;
-		private string tengiangvien;
-		private string matkhau;
-		private string malop;
-		private string tenlop;
-		private int sosinhvienlop;
+		private string magiangvien = "";
+		private string tengiangvien = "";
+		private string matkhau = "";
+		private string malop = "";
+		private string tenlop = "";
+		private int sosinhvienlop = 0;
 
 		public GiangVien() {
 			this.magiangvien = "";

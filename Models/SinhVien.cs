@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace QuanLySinhVien_SQLserver {
 	internal class SinhVien {
-		private string tensinhvien;
-		private string masosinhvien;
-		private float diemsinhvien;
-		private string hoclucsinhvien;
+		private string tensinhvien = "";
+		private string masosinhvien = "";
+		private float diemsinhvien = 0f;
+		private string hoclucsinhvien = "";
 
 		public SinhVien() {
 			this.tensinhvien = "";

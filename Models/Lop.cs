@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace QuanLySinhVien_SQLserver {
 	internal class Lop {
-		private string malop;
-		private string tenlop;
+		private string malop = "";
+		private string tenlop = "";
 
 		public Lop() {
 			this.malop = "";
