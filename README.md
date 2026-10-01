@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/trgchinhh/mophong-mahoabatdoixung">
+  <a href="https://github.com/trgchinhh/quanlysinhvien-sqlserver">
     <img src="https://img.shields.io/badge/Language-C%23-512BD4.svg" alt="Language"/>
   </a>
   <a href="LICENSE">
@@ -96,8 +96,8 @@ Các bảng dữ liệu chính bao gồm:
 
 ## Clone dự án về máy 
 ```bash
-git clone https://github.com/Interstella-OS/Blockchain-Miner.git
-cd Blockchain-Miner
+git clone https://github.com/trgchinhh/quanlysinhvien-sqlserver.git
+cd quanlysinhvien-sqlserver/
 ```
 
 ## Cấu hình SQL server
