@@ -138,7 +138,8 @@ dotnet run
 
 ## Một số giới hạn 
 
-Đây là dự án phục vụ mục đích học tập và mô phỏng hệ thống quản lý nên sẽ có những lỗi không mong muốn phát sinh trong quá trình thử nghiệm 
+Đây là dự án phục vụ mục đích học tập và mô phỏng
+Hệ thống quản lý nên sẽ có những lỗi không mong muốn phát sinh trong quá trình thử nghiệm 
 
 Môt số thành phần sẽ được tiếp tục cải thiện 
 
