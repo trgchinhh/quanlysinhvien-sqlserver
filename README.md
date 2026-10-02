@@ -16,7 +16,7 @@
 
 ## Quản lý sinh viên C#
 
-Dự án này mô phỏng một hệ thống quản lý sinh viên dưới dạng ứng dụng console (CLI), được xây dựng bằng C#. Chương trình hướng đến việc mô phỏng quy trình quản lý trong môi trường thực tế, bao gồm đăng nhập và đăng xuất tài khoản giảng viên, quản lý lớp học, quản lý thông tin sinh viên và lưu trữ dữ liệu vào cơ sở dữ liệu thật.
+Dự án này mô phỏng một hệ thống quản lý sinh viên dưới dạng ứng dụng console (CLI), được xây dựng bằng C#. Chương trình hướng đến việc mô phỏng quy trình quản lý trong môi trường thực tế, bao gồm đăng nhập và đăng xuất tài khoản giảng viên, quản lý lớp học, quản lý thông tin sinh viên và lưu trữ dữ liệu vào cơ sở dữ liệu SQL Server.
 
 ![quanlysinhvien-sqlserver demo](docs/quanlysinhvien-sqlserver.gif)
 
