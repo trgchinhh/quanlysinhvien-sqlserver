@@ -150,9 +150,12 @@ Môt số thành phần sẽ được tiếp tục cải thiện
 - [ ] Cải thiện bảo mật tài khoản
 - [ ] Bổ sung hệ thống Logging
 
+![demo](img/demo.png)
+
 ## Tác giả
 **Nguyễn Trường Chinh (NTC++)**<br>
-**Github:** [https://github.com/trgchinhh](https://github.com/trgchinhh)
+**Ủng hộ:** [Nếu bạn thấy hữu ích hãy ủng hộ mình](https://github.com/sponsors/trgchinhh)<br>
+**GitHub:** [https://github.com/trgchinhh](https://github.com/trgchinhh)
 
 ---
 
