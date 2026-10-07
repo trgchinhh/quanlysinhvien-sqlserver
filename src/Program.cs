@@ -2,9 +2,11 @@
 using System;
 using System.Text;
 using Spectre.Console;
+using DotNetEnv;
 
 public class Program {        
 	public static void Main() {
+		Env.Load("env/.env");
 		QuanLyGiangVien quanlygiangvien = new QuanLyGiangVien();
 		var luachonmau = HamPhuProgram.ChonMau();
 		while (true) {

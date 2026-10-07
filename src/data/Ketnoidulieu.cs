@@ -10,10 +10,10 @@ namespace QuanLySinhVien_SQLserver {
 	internal class Ketnoidulieu {
 		// Bổ sung tên server SQL server của máy bạn
 		// ví dụ tenserver = DESKTOP-E...\\SQLEXPRESS
-		private static readonly string tenserver = "";
+		private static readonly string tenserver = Environment.GetEnvironmentVariable("TENSERVER") ?? "";
 		// tên database đã được tích hợp vào file script.sql 
 		// nếu đổi tên thì phải đổi trong file script
-		private static readonly string tendatabse = "QuanLySinhVien-SQLserver";
+		private static readonly string tendatabse = Environment.GetEnvironmentVariable("TENDATABASE") ?? "";
 		private static readonly string csdl =
 			$"Server={tenserver};Database={tendatabse};Trusted_Connection=True;TrustServerCertificate=True;";
 
@@ -33,7 +33,7 @@ namespace QuanLySinhVien_SQLserver {
 
 		public bool KiemTra() {
 			if(string.IsNullOrEmpty(tenserver) || string.IsNullOrEmpty(tendatabse)){
-				Mau.InLoi("Chưa điền tên server/database. Vui lòng điền trong Data/KetNoiDuLieu.cs");
+				Mau.InLoi("Chưa điền tên server/database. Vui lòng điền trong env/.env");
 				return false;
 			}
 			try {

@@ -8,3 +8,5 @@ DB/
 tenserver.txt
 logs/
 *.log
+env/
+*.env
