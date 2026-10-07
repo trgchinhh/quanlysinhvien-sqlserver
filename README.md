@@ -132,10 +132,24 @@ Nếu muốn đổi tên database thành tên khác
 - Nhấn Win + R nhập services.msc
 - Tìm `SQL Server (SQLEXPRESS)` và ấn start, apply 
 
+
+## Cấu hình dotenv
+
+Tạo folder env sao cho folder nằm cùng folder src và các thư mục khác
+Vào folder env và tạo file .env có nội dung như sau  
+
+```dotenv
+TENSERVER=<THAY TÊN SERVER DATABASE>
+TENDATABASE=QuanLySinhVien-SQLserver
+``` 
+> TENSERVER có dạng `DESKTOP-E...\\SQLEXPRESS`
+
+
 ## Biên dịch và khởi chạy 
 ```bash
 dotnet run 
 ```
+
 
 ## Một số giới hạn 
 

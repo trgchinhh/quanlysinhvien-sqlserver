@@ -8,11 +8,9 @@ using Microsoft.IdentityModel.Tokens.Experimental;
 
 namespace QuanLySinhVien_SQLserver {
 	internal class Ketnoidulieu {
-		// Bổ sung tên server SQL server của máy bạn
-		// ví dụ tenserver = DESKTOP-E...\\SQLEXPRESS
-		private static readonly string tenserver = Environment.GetEnvironmentVariable("TENSERVER") ?? "";
 		// tên database đã được tích hợp vào file script.sql 
 		// nếu đổi tên thì phải đổi trong file script
+		private static readonly string tenserver = Environment.GetEnvironmentVariable("TENSERVER") ?? "";
 		private static readonly string tendatabse = Environment.GetEnvironmentVariable("TENDATABASE") ?? "";
 		private static readonly string csdl =
 			$"Server={tenserver};Database={tendatabse};Trusted_Connection=True;TrustServerCertificate=True;";
