@@ -39,17 +39,30 @@ namespace QuanLySinhVien_SQLserver {
 			try {
 				using var ketnoi = LayKetNoi();
 				InThongTinServer(ketnoi);
+				Khaibaolog.logketnoidulieu.GhiLog(
+					loglevel.SUCCESS,
+					"Kết nối database thành công"
+				);
 				return true;				
 			} catch(SqlException ex){
 				Mau.InLoi($"Không kết nối được với Database: {ex.Message}");
+				Khaibaolog.logketnoidulieu.GhiLog(
+					loglevel.CRITICAL,
+					"Kết nối database không thành công"
+				);
 				return false;
 			} catch(Exception ex){
 				Mau.InLoi($"Lỗi: {ex.Message}");
+				Khaibaolog.logketnoidulieu.GhiLog(
+					loglevel.ERROR,
+					$"Đã xảy ra lỗi {ex.Message}"
+				);
 				return false;
 			}
 		}
 
 		// các hàm xử lý bảng lớp 
+		
 		public List<Lop> LayDanhSachLopCSDL() {
 			var danhsach = new List<Lop>();
 			using var ketnoi = LayKetNoi();
@@ -63,12 +76,14 @@ namespace QuanLySinhVien_SQLserver {
 			return danhsach;
 		}
 
+		// đếm số lớp trong database 
 		public int DemSoLopCSDL() {
 			using var ketnoi = LayKetNoi();
 			var lenh = new SqlCommand("SELECT COUNT(*) FROM Lop", ketnoi);
 			return Convert.ToInt32(lenh.ExecuteScalar());
 		}
 
+		// kiểm tra có tồn tại mã lớp 
 		public bool KiemTraLopCSDL(string malop) {
 			using var ketnoi = LayKetNoi();
 			var lenh = new SqlCommand("SELECT COUNT(*) FROM Lop WHERE MaLop=@m", ketnoi);
@@ -76,6 +91,7 @@ namespace QuanLySinhVien_SQLserver {
 			return Convert.ToInt32(lenh.ExecuteScalar()) > 0;
 		}
 
+		// thêm lớp mới vào database 
 		public void ThemLopCSDL(Lop lop) {
 			using var ketnoi = LayKetNoi();
 			var lenh = new SqlCommand(
@@ -110,12 +126,14 @@ namespace QuanLySinhVien_SQLserver {
 			return danhsach;
 		}
 
+		// đếm số giảng viên trong csdl
 		public int DemSoGiangVienCSDL() {
 			using var ketnoi = LayKetNoi();
 			var lenh = new SqlCommand("SELECT COUNT(*) FROM GiangVien", ketnoi);
 			return Convert.ToInt32(lenh.ExecuteScalar());
 		}
 
+		// thêm giảng viên mới vào database 
 		public void ThemGiangVienCSDL(GiangVien giangvien) {
 			using var ketnoi = LayKetNoi();
 			var lenh = new SqlCommand(
@@ -187,6 +205,7 @@ namespace QuanLySinhVien_SQLserver {
 		}
 
 		// các hàm xử lý bảng sinh viên (đều giới hạn theo lớp của giảng viên) 
+		// hàm thêm sinh viên và database 
 		public void ThemCSDL(SinhVien sinhvien, string malop) {
 			using var ketnoi = LayKetNoi();
 			var lenh = new SqlCommand(
@@ -200,6 +219,7 @@ namespace QuanLySinhVien_SQLserver {
 			lenh.ExecuteNonQuery();
 		}
 
+		// hàm sửa dữ liệu 
 		public bool SuaCSDL(string masosinhviencu, SinhVien sinhvien, string malop) {
 			using var ketnoi = LayKetNoi();
 			var lenh = new SqlCommand(
@@ -214,6 +234,7 @@ namespace QuanLySinhVien_SQLserver {
 			return lenh.ExecuteNonQuery() > 0;
 		}
 
+		// hàm xóa dữ liệu 
 		public bool XoaCSDL(string masosinhvien, string malop) {
 			using var ketnoi = LayKetNoi();
 			var lenh = new SqlCommand(
@@ -224,6 +245,7 @@ namespace QuanLySinhVien_SQLserver {
 			return lenh.ExecuteNonQuery() > 0;
 		}
 
+		// hàm lấy danh sách theo lớp 
 		public List<SinhVien> LayDanhSachCSDL(string malop) {
 			var danhsach = new List<SinhVien>();
 			using var ketnoi = LayKetNoi();

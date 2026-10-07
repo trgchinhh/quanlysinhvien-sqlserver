@@ -89,6 +89,10 @@ namespace QuanLySinhVien_SQLserver {
 					// lớp mới tạo chưa có sinh viên thì không có dữ liệu mẫu để nạp
 					if (danhsachmau.Count == 0) {
 						Mau.InCanhBao($"Lớp {this.giangvien.LayTenLopDayDu()} chưa có sinh viên, hãy thêm sinh viên !");
+						Khaibaolog.logsinhvien.GhiLog(
+							loglevel.INFO,
+							"Nạp danh sách. Lớp mới chưa có sinh viên. Danh sách sinh viên rỗng"
+						);
 					}
 					else {
 						Mau.InCanhBao($"Lớp {this.giangvien.LayTenLopDayDu()} chưa có sinh viên, đang nạp dữ liệu mẫu ...");
@@ -97,11 +101,19 @@ namespace QuanLySinhVien_SQLserver {
 						} 
 						this.danhsachsinhvien = danhsachmau;
 						Mau.InThanhCong("Đã nạp xong !");
+						Khaibaolog.logsinhvien.GhiLog(
+							loglevel.INFO,
+							"Nạp danh sách. Lớp đã được tạo mẫu. Danh sách sinh viên được nạp"
+						);
 					}
 				}
 			}
 			catch (Exception ex) {
 				Mau.InThanhCong($"Lỗi kết nối database: {ex.Message}");
+				Khaibaolog.logketnoidulieu.GhiLog(
+					loglevel.ERROR,
+					$"Lỗi: {ex.Message}"
+				);
 			}
 			finally {
 				this.soluongsinhvien = this.danhsachsinhvien.Count;
@@ -166,9 +178,17 @@ namespace QuanLySinhVien_SQLserver {
 					this.danhsachsinhvien.Add(sinhvienmoi);
 					this.soluongsinhvien++;
 					soluongsvdathem++;
+					Khaibaolog.logsinhvien.GhiLog(
+						loglevel.SUCCESS,
+						$"Thêm thành công {soluongsvdathem} vào danh sách"
+					);
 				}
 				catch (Exception ex) {
 					Mau.InCanhBao($"Không thêm được (mã số có thể đã bị trùng): {ex.Message}");
+					Khaibaolog.logsinhvien.GhiLog(
+						loglevel.WARNING,
+						$"Thêm không thành công {soluongsvdathem} sinh viên (mã số có thể trùng)"
+					);
 				}
 			}
 			Console.WriteLine();
@@ -191,57 +211,93 @@ namespace QuanLySinhVien_SQLserver {
 				this.soluongsinhvien--;
 				Console.WriteLine();
 				Mau.InThanhCong($"Đã xóa thông tin sinh viên: {sv.TenSinhVien}");
+				Khaibaolog.logsinhvien.GhiLog(
+					loglevel.SUCCESS,
+					$"Đã xóa thành công sinh viên: {sv.TenSinhVien}"
+				);
 			}
 			catch (Exception ex) {
 				Mau.InLoi($"Lỗi: {ex.Message}");
+				Khaibaolog.logsinhvien.GhiLog(
+					loglevel.ERROR,
+					$"Lỗi: {ex.Message}"
+				);
 			}
 		}
 
 		// sửa thông tin sinh viên 
 		public void SuaThongTinSinhVien() {
 			Console.WriteLine($"Sửa thông tin sinh viên trong lớp {this.giangvien.LayTenLopDayDu()}");
-			bool thaydoi = false;
 			this.InDanhSachSinhVien();
 			int sothutu = this.NhapSoThuTu();
 			if (sothutu == 0) {
 				return;
 			}
 			SinhVien sinhvien = this.danhsachsinhvien[sothutu - 1];
+			// lưu giá trị cũ để so sánh và ghi log
+			string tencu = sinhvien.TenSinhVien;
 			string masosinhviencu = sinhvien.MaSoSinhVien;
+			float diemcu = sinhvien.DiemSinhVien;
+			// danh sách các thay đổi, mỗi phần tử dạng: tên: "A" -> "B"
+			List<string> danhsachthaydoi = new List<string>();
 			Console.WriteLine("Bỏ trống và nhấn Enter để giữ nguyên giá trị cũ");
 
 			Console.Write("Nhập tên: ");
-			string tenthay = Console.ReadLine()!;
+			string tenthay = Console.ReadLine()!.Trim();
 			if (string.IsNullOrEmpty(tenthay)) {
-				tenthay = sinhvien.TenSinhVien;
+				tenthay = tencu;
 			}
-			else thaydoi = true;
+			else if (tenthay != tencu) {
+				danhsachthaydoi.Add($"tên: \"{tencu}\" -> \"{tenthay}\"");
+			}
 			sinhvien.TenSinhVien = tenthay;
 
 			Console.Write("Nhập mã số: ");
-			string masothay = Console.ReadLine()!;
+			string masothay = Console.ReadLine()!.Trim();
 			if (string.IsNullOrEmpty(masothay)) {
-				masothay = sinhvien.MaSoSinhVien;
+				masothay = masosinhviencu;
 			}
-			else thaydoi = true;
+			else if (masothay != masosinhviencu) {
+				danhsachthaydoi.Add($"mã số: \"{masosinhviencu}\" -> \"{masothay}\"");
+			}
 			sinhvien.MaSoSinhVien = masothay;
 
 			Console.Write("Nhập điểm: ");
 			float.TryParse(Console.ReadLine()!, out float diemthay);
 			if (diemthay <= 0 || diemthay > 10) {
-				diemthay = sinhvien.DiemSinhVien;
+				diemthay = diemcu;
 			}
-			else thaydoi = true;
+			else if (diemthay != diemcu) {
+				danhsachthaydoi.Add($"điểm: {diemcu:F1} -> {diemthay:F1}");
+			}
 			sinhvien.DiemSinhVien = diemthay;
+
+			bool thaydoi = danhsachthaydoi.Count > 0;
+			string noidungthaydoi = string.Join("; ", danhsachthaydoi);
 			if (thaydoi) {
 				try {
 					db.SuaCSDL(masosinhviencu, sinhvien, this.giangvien.MaLop);
+					Khaibaolog.logsinhvien.GhiLog(
+						loglevel.SUCCESS,
+						$"Sửa thông tin sinh viên {tencu} ({masosinhviencu}) lớp {this.giangvien.MaLop}: {noidungthaydoi}"
+					);
 				} catch(Exception ex) {
 					Mau.InLoi($"Lỗi: {ex.Message}");
+					Khaibaolog.logsinhvien.GhiLog(
+						loglevel.WARNING,
+						$"Sửa không thành công sinh viên {tencu} ({masosinhviencu}) lớp {this.giangvien.MaLop}. " +
+						$"Thay đổi định sửa: {noidungthaydoi}. Lỗi: {ex.Message}"
+					);
 					// nếu trùng mã thì nạp lại dữ liệu danh sách 
 					this.Napdulieudanhsach();
 					return;
 				}
+			}
+			else {
+				Khaibaolog.logsinhvien.GhiLog(
+					loglevel.INFO,
+					$"Sửa thông tin sinh viên {tencu} ({masosinhviencu}) lớp {this.giangvien.MaLop}. Không có thay đổi"
+				);
 			}
 			Console.WriteLine();
 			Mau.InThanhCong(
@@ -384,6 +440,7 @@ namespace QuanLySinhVien_SQLserver {
 				}
 				// lưu dữ liệu mới nhất trc khi sắp xếp để tránh sai sót dữ liệu
 				this.Napdulieudanhsach();
+				string noidunglog = "";
 				Console.WriteLine();
 				if (luachon == 1) {
 					this.danhsachsinhvien.Sort((a, b)
@@ -392,7 +449,8 @@ namespace QuanLySinhVien_SQLserver {
 							HamPhuQuanLySinhVien.LayTenCuoi(b.TenSinhVien)
 						)
 					);
-					Mau.InThanhCong("Đã sắp xếp theo tên (A->Z)");
+					noidunglog = "Đã sắp xếp theo tên (A->Z)";
+					Mau.InThanhCong(noidunglog);
 				}
 				else if (luachon == 2) {
 					this.danhsachsinhvien.Sort((a, b)
@@ -401,24 +459,28 @@ namespace QuanLySinhVien_SQLserver {
 							HamPhuQuanLySinhVien.LayTenCuoi(a.TenSinhVien)
 						)
 					);
-					Mau.InThanhCong("Đã sắp xếp theo tên (Z->A)");
+					noidunglog = "Đã sắp xếp theo tên (Z->A)";
+					Mau.InThanhCong(noidunglog);
 				}
 				else if (luachon == 3){
 					this.danhsachsinhvien.Sort((a, b)
 						=> (HamPhuQuanLySinhVien.LaySoMaSoSinhVien(a.MaSoSinhVien)).
 						CompareTo(HamPhuQuanLySinhVien.LaySoMaSoSinhVien(b.MaSoSinhVien))
 					);
-					Mau.InThanhCong("Đã sắp xếp theo mã số (Thấp->Cao)");
+					noidunglog = "Đã sắp xếp theo mã số (Thấp->Cao)";
+					Mau.InThanhCong(noidunglog);
 				}	
 				else if (luachon == 4) {
 					this.danhsachsinhvien.Sort((a, b)
 						=> (a.DiemSinhVien).CompareTo(b.DiemSinhVien));
-					Mau.InThanhCong("Đã sắp xếp theo điểm (Thấp->Cao)");
+					noidunglog = "Đã sắp xếp theo điểm (Thấp->Cao)";
+					Mau.InThanhCong(noidunglog);
 				}
 				else if (luachon == 5) {
 					this.danhsachsinhvien.Sort((a, b)
 						=> (b.DiemSinhVien).CompareTo(a.DiemSinhVien));
-					Mau.InThanhCong("Đã sắp xếp theo điểm (Cao->Thấp)");
+					noidunglog = "Đã sắp xếp theo điểm (Cao->Thấp)";
+					Mau.InThanhCong(noidunglog);
 				}
 				else if (luachon == 0) {
 					hiendanhsach = false;
@@ -430,9 +492,17 @@ namespace QuanLySinhVien_SQLserver {
 				}
 				try {
 					db.LuuThuTuCSDL(this.danhsachsinhvien, this.giangvien.MaLop);
+					Khaibaolog.logsinhvien.GhiLog(
+						loglevel.SUCCESS,
+						noidunglog
+					);
 				}
 				catch (Exception ex) {
 					Mau.InLoi($"Lỗi lưu thứ tự: {ex.Message}");
+					Khaibaolog.logsinhvien.GhiLog(
+						loglevel.ERROR,
+						$"Lỗi: {ex.Message}"
+					);
 				}
 				break;
 			}

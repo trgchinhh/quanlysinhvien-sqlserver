@@ -33,6 +33,10 @@ namespace QuanLySinhVien_SQLserver {
 			Console.WriteLine(HamPhuProgram.noidungbanner);
 			// Nếu ko kết nối được với database thì exit 
 			if(!db.KiemTra()){
+				Khaibaolog.loggiangvien.GhiLog(
+					loglevel.ERROR,
+					"Khởi tạo quản lý giảng viên. Không kết nối được database, thoát chương trình"
+				);
 				Environment.Exit(0);
 			}
 			this.Napdulieulopvagiangvien();
@@ -59,11 +63,25 @@ namespace QuanLySinhVien_SQLserver {
 					}
 					this.NapLaiDanhSach();
 					Mau.InThanhCong("Đã nạp xong !");
+					Khaibaolog.loggiangvien.GhiLog(
+						loglevel.INFO,
+						$"Nạp dữ liệu mẫu. Đã nạp {danhsachlopmau.Count} lớp và {danhsachgiangvienmau.Count} giảng viên"
+					);
+				}
+				else {
+					Khaibaolog.loggiangvien.GhiLog(
+						loglevel.INFO,
+						$"Nạp dữ liệu. Đã nạp {this.danhsachlop.Count} lớp và {this.danhsachgiangvien.Count} giảng viên từ database"
+					);
 				}
 			}
 			catch (Exception ex) {
 				Mau.InLoi($"Lỗi nạp dữ liệu giảng viên: {ex.Message}");
 				Mau.InCanhBao("Hãy chạy file sql/script.sql để tạo bảng lớp và giảng viên trước !");
+				Khaibaolog.loggiangvien.GhiLog(
+					loglevel.ERROR,
+					$"Lỗi nạp dữ liệu lớp và giảng viên: {ex.Message}"
+				);
 			}
 		}
 
@@ -72,16 +90,28 @@ namespace QuanLySinhVien_SQLserver {
 			Console.Clear();
 			Console.WriteLine(HamPhuProgram.noidungbanner);
 			HamPhuQuanLyGiangVien.InHuongDanDangKy();
+			Khaibaolog.loggiangvien.GhiLog(
+				loglevel.INFO,
+				"Bắt đầu đăng ký tài khoản giảng viên"
+			);
 			string magiangvien;
 			while (true) {
 				Console.Write("(?) Nhập mã giảng viên: ");
 				magiangvien = Console.ReadLine()!.Trim().ToUpper();
 				if (magiangvien.Length == 0) {
 					Mau.InCanhBao("Bỏ trống mã giảng viên, hủy đăng ký !");
+					Khaibaolog.loggiangvien.GhiLog(
+						loglevel.WARNING,
+						"Hủy đăng ký. Bỏ trống mã giảng viên"
+					);
 					return null;
 				}
 				if (this.TonTaiGiangVien(magiangvien)) {
 					Mau.InCanhBao("Mã giảng viên đã tồn tại, hãy nhập mã khác !");
+					Khaibaolog.loggiangvien.GhiLog(
+						loglevel.WARNING,
+						$"Đăng ký. Mã giảng viên {magiangvien} đã tồn tại"
+					);
 					continue;
 				}
 				break;
@@ -90,6 +120,10 @@ namespace QuanLySinhVien_SQLserver {
 			string tengiangvien = Console.ReadLine()!.Trim();
 			if (tengiangvien.Length == 0) {
 				Mau.InCanhBao("Bỏ trống tên giảng viên, hủy đăng ký !");
+				Khaibaolog.loggiangvien.GhiLog(
+					loglevel.WARNING,
+					$"Hủy đăng ký {magiangvien}. Bỏ trống tên giảng viên"
+				);
 				return null;
 			}
 			string matkhau;
@@ -98,10 +132,18 @@ namespace QuanLySinhVien_SQLserver {
 				matkhau = HamPhuQuanLyGiangVien.NhapMatKhau(1);
 				if (matkhau.Length == 0) {
 					Mau.InCanhBao("Bỏ trống mật khẩu, hủy đăng ký !");
+					Khaibaolog.loggiangvien.GhiLog(
+						loglevel.WARNING,
+						$"Hủy đăng ký {magiangvien}. Bỏ trống mật khẩu"
+					);
 					return null;
 				}
 				if (matkhau.Length < 6) {
 					Mau.InCanhBao("Mật khẩu phải có tối thiểu 6 ký tự !");
+					Khaibaolog.loggiangvien.GhiLog(
+						loglevel.WARNING,
+						$"Đăng ký {magiangvien}. Mật khẩu ngắn hơn 6 ký tự"
+					);
 					continue;
 				}
 				break;
@@ -111,16 +153,28 @@ namespace QuanLySinhVien_SQLserver {
 				string nhaplai = HamPhuQuanLyGiangVien.NhapMatKhau(2);
 				if (nhaplai.Length == 0) {
 					Mau.InCanhBao("Bỏ trống mật khẩu nhập lại, hủy đăng ký !");
+					Khaibaolog.loggiangvien.GhiLog(
+						loglevel.WARNING,
+						$"Hủy đăng ký {magiangvien}. Bỏ trống mật khẩu nhập lại"
+					);
 					return null;
 				}
 				if (nhaplai == matkhau) {
 					break;
 				}
 				Mau.InCanhBao("Hai mật khẩu không khớp, hãy nhập lại !");
+				Khaibaolog.loggiangvien.GhiLog(
+					loglevel.WARNING,
+					$"Đăng ký {magiangvien}. Hai mật khẩu không khớp"
+				);
 			}
 
 			Lop? lop = this.NhapLopPhuTrach();
 			if (lop == null) {
+				Khaibaolog.loggiangvien.GhiLog(
+					loglevel.WARNING,
+					$"Hủy đăng ký {magiangvien}. Không có lớp phụ trách"
+				);
 				return null;
 			}
 
@@ -131,9 +185,17 @@ namespace QuanLySinhVien_SQLserver {
 			}
 			catch (Exception ex) {
 				Mau.InLoi($"Lỗi đăng ký: {ex.Message}");
+				Khaibaolog.loggiangvien.GhiLog(
+					loglevel.ERROR,
+					$"Lỗi đăng ký giảng viên {magiangvien}: {ex.Message}"
+				);
 				return null;
 			}
 			this.danhsachgiangvien.Add(giangvienmoi);
+			Khaibaolog.loggiangvien.GhiLog(
+				loglevel.SUCCESS,
+				$"Đăng ký thành công giảng viên {giangvienmoi.MaGiangVien} ({giangvienmoi.TenGiangVien}), phụ trách lớp {giangvienmoi.MaLop}"
+			);
 			Console.WriteLine();
 			Mau.InThanhCong(
 				$"Đăng ký thành công !\n" +
@@ -158,12 +220,20 @@ namespace QuanLySinhVien_SQLserver {
 				string magiangvien = Console.ReadLine()!.Trim().ToUpper();
 				if (magiangvien.Length == 0) {
 					Mau.InCanhBao("Bỏ trống mã giảng viên, hủy đăng nhập !");
+					Khaibaolog.loggiangvien.GhiLog(
+						loglevel.WARNING,
+						$"Hủy đăng nhập (lần {lanthu}/{solandangnhaptoida}). Bỏ trống mã giảng viên"
+					);
 					return null;
 				}
 
 				string matkhau = HamPhuQuanLyGiangVien.NhapMatKhau(1);
 				if (matkhau.Length == 0) {
 					Mau.InCanhBao("Bỏ trống mật khẩu, hủy đăng nhập !");
+					Khaibaolog.loggiangvien.GhiLog(
+						loglevel.WARNING,
+						$"Hủy đăng nhập {magiangvien} (lần {lanthu}/{solandangnhaptoida}). Bỏ trống mật khẩu"
+					);
 					return null;
 				}
 				string hash_matkhau = Sha256.Hash(matkhau);
@@ -171,9 +241,17 @@ namespace QuanLySinhVien_SQLserver {
 					GiangVien? giangvien = db.DangNhapCSDL(magiangvien, hash_matkhau);
 					if (giangvien == null) {
 						Mau.InLoi("Sai mã giảng viên hoặc mật khẩu !");
+						Khaibaolog.loggiangvien.GhiLog(
+							loglevel.WARNING,
+							$"Đăng nhập thất bại {magiangvien} (lần {lanthu}/{solandangnhaptoida}). Sai mã giảng viên hoặc mật khẩu"
+						);
 						HamPhuProgram.DungChuongTrinh();
 						continue;
 					}
+					Khaibaolog.loggiangvien.GhiLog(
+						loglevel.SUCCESS,
+						$"Đăng nhập thành công giảng viên {giangvien.MaGiangVien} ({giangvien.TenGiangVien}), lớp {giangvien.MaLop}"
+					);
 					Console.WriteLine();
 					Mau.InThanhCong(
 						$"Đăng nhập thành công !\n" +
@@ -186,11 +264,19 @@ namespace QuanLySinhVien_SQLserver {
 				}
 				catch (Exception ex) {
 					Mau.InLoi($"Lỗi đăng nhập: {ex.Message}");
+					Khaibaolog.loggiangvien.GhiLog(
+						loglevel.ERROR,
+						$"Lỗi đăng nhập {magiangvien} (lần {lanthu}/{solandangnhaptoida}): {ex.Message}"
+					);
 					HamPhuProgram.DungChuongTrinh();
 				}
 			}
 			Console.WriteLine();
 			Mau.InLoi($"Sai quá {solandangnhaptoida} lần, vui lòng thử lại !");
+			Khaibaolog.loggiangvien.GhiLog(
+				loglevel.ERROR,
+				$"Đăng nhập thất bại quá {solandangnhaptoida} lần"
+			);
 			return null;
 		}
 
@@ -202,10 +288,18 @@ namespace QuanLySinhVien_SQLserver {
 				malop = Console.ReadLine()!.Trim().ToUpper();
 				if (malop.Length == 0) {
 					Mau.InCanhBao("Bỏ trống mã lớp, hủy đăng ký !");
+					Khaibaolog.loggiangvien.GhiLog(
+						loglevel.WARNING,
+						"Hủy đăng ký. Bỏ trống mã lớp"
+					);
 					return null;
 				}
 				if (this.LopDaCoGiangVien(malop)) {
 					Mau.InCanhBao("Lớp đã có giảng viên phụ trách, hãy nhập mã lớp khác !");
+					Khaibaolog.loggiangvien.GhiLog(
+						loglevel.WARNING,
+						$"Đăng ký. Lớp {malop} đã có giảng viên phụ trách"
+					);
 					continue;
 				}
 				break;
@@ -214,6 +308,10 @@ namespace QuanLySinhVien_SQLserver {
 			string tenlop = Console.ReadLine()!.Trim();
 			if (tenlop.Length == 0) {
 				Mau.InCanhBao("Bỏ trống tên lớp, hủy đăng ký !");
+				Khaibaolog.loggiangvien.GhiLog(
+					loglevel.WARNING,
+					$"Hủy đăng ký. Bỏ trống tên lớp {malop}"
+				);
 				return null;
 			}
 			var lopmoi = new Lop(malop, tenlop);
@@ -222,9 +320,17 @@ namespace QuanLySinhVien_SQLserver {
 			}
 			catch (Exception ex) {
 				Mau.InLoi($"Lỗi tạo lớp: {ex.Message}");
+				Khaibaolog.loggiangvien.GhiLog(
+					loglevel.ERROR,
+					$"Lỗi tạo lớp {malop}: {ex.Message}"
+				);
 				return null;
 			}
 			this.danhsachlop.Add(lopmoi);
+			Khaibaolog.loggiangvien.GhiLog(
+				loglevel.SUCCESS,
+				$"Tạo lớp mới thành công: {lopmoi.LayTenLopDayDu()}"
+			);
 			Mau.InThanhCong($"Đã tạo lớp mới {lopmoi.LayTenLopDayDu()}");
 			return lopmoi;
 		}
@@ -241,6 +347,10 @@ namespace QuanLySinhVien_SQLserver {
 			}
 			catch (Exception ex) {
 				Mau.InLoi($"Lỗi kiểm tra mã giảng viên: {ex.Message}");
+				Khaibaolog.loggiangvien.GhiLog(
+					loglevel.ERROR,
+					$"Lỗi kiểm tra mã giảng viên {magiangvien}: {ex.Message}"
+				);
 				return true;
 			}
 		}
@@ -257,6 +367,10 @@ namespace QuanLySinhVien_SQLserver {
 			}
 			catch (Exception ex) {
 				Mau.InLoi($"Lỗi kiểm tra lớp: {ex.Message}");
+				Khaibaolog.loggiangvien.GhiLog(
+					loglevel.ERROR,
+					$"Lỗi kiểm tra lớp {malop}: {ex.Message}"
+				);
 				return true;
 			}
 		}
@@ -281,8 +395,16 @@ namespace QuanLySinhVien_SQLserver {
 			}
 			catch (Exception ex) {
 				Mau.InLoi($"Lỗi xem thông tin tài khoản: {ex.Message}");
+				Khaibaolog.loggiangvien.GhiLog(
+					loglevel.ERROR,
+					$"Lỗi xem thông tin tài khoản giảng viên: {ex.Message}"
+				);
 				return;
 			}
+			Khaibaolog.loggiangvien.GhiLog(
+				loglevel.INFO,
+				$"Xem thông tin tài khoản giảng viên. {this.danhsachlop.Count} lớp, {this.danhsachgiangvien.Count} tài khoản"
+			);
 			Console.WriteLine();
 			Mau.InThanhCong(
 				$"Tổng cộng {this.danhsachlop.Count} lớp và {this.danhsachgiangvien.Count} tài khoản giảng viên"

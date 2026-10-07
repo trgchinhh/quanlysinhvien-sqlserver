@@ -7,14 +7,17 @@ using Spectre.Console;
 
 namespace QuanLySinhVien_SQLserver { 
 	internal class Mau {
-		public static List<Color> danhsachmau = new List<Color> {
-			Color.Red,
-			Color.Green,
-			Color.Yellow,
-			Color.Orange1,
-			Color.Aquamarine1,
-			Color.Cyan,
-			Color.Default
+		public static List<Color> danhsachmau = new List<Color> { 
+			/*0*/ Color.Red, 
+			/*1*/ Color.Green, 
+			/*2*/ Color.Yellow, 
+			/*3*/ Color.Orange1, 
+			/*4*/ Color.Aquamarine1, 
+			/*5*/ Color.Cyan, 
+			/*6*/ Color.Default, 
+			/*7*/ Color.Gray, 
+			/*8*/ Color.Blue, 
+			/*9*/ Color.Magenta 
 		};
 
 		public static void ToMau(string noidung, Color mau, bool xuongdong = false) {

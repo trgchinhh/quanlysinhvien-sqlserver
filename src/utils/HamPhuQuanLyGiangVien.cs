@@ -18,7 +18,7 @@ namespace QuanLySinhVien_SQLserver {
         public static void InHuongDanDangNhap(int lanthu, int soluonglanthu) {
             AnsiConsole.Write(
                 new Panel(
-                    "[yellow]Tài khoản mẫu:[/]\n" +
+                    "[yellow]Tài khoản mẫu[/]\n" +
                     "[yellow]Mã tài khoản:[/] GV001 / GV002 / GV003\n" + 
                     "[yellow]Mật khẩu:[/] 123456"
                 )

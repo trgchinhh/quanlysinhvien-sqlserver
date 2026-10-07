@@ -3,7 +3,7 @@ using System;
 using System.Text;
 using Spectre.Console;
 
-public class Program {
+public class Program {        
 	public static void Main() {
 		QuanLyGiangVien quanlygiangvien = new QuanLyGiangVien();
 		var luachonmau = HamPhuProgram.ChonMau();

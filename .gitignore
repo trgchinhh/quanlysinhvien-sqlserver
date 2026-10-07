@@ -6,3 +6,5 @@ obj/
 .vs/
 DB/
 tenserver.txt
+logs/
+*.log
